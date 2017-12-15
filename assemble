@@ -7,6 +7,8 @@ use Symfony\Component\Console\Application;
 $application = new Application();
 
 $assembler = new \App\Assembler\Assembler();
-$application->add(new \App\Command\AssembleCommand($assembler));
+$command = new \App\Command\AssembleCommand($assembler);
 
+$application->add($command);
+$application->setDefaultCommand($command->getName(), true);
 $application->run();
