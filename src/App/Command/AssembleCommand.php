@@ -1,6 +1,7 @@
 <?php
 namespace App\Command;
 
+use App\Exception;
 use App\Assembler\Assembler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -30,6 +31,17 @@ class AssembleCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $filename = $input->getArgument('filename');
+
+        $path = realpath(APP_ROOT . DIRECTORY_SEPARATOR . $filename);
+
+        @$file = fopen($path, 'r');
+        if ($file === FALSE) {
+            throw new Exception\FileNotFoundException($filename);
+        }
+
+        $this->assembler->assemble($file);
+
+        die();
 
         $instruction = \App\Instruction\Instruction::getInstruction($filename);
 

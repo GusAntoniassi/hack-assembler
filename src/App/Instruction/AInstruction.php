@@ -14,17 +14,13 @@ class AInstruction extends Instruction {
     }
 
     public function toString() {
-        return $this->toBinary($this->number);
-    }
-
-    private function toBinary($num) {
-        if ($num > self::MAX_NUM) {
+        if ($this->number > self::MAX_NUM) {
             throw new Exception\InvalidInstructionException($this->instruction, 'Valor acima do permitido');
-        } else if ($num < 0) {
+        } else if ($this->number < 0) {
             throw new Exception\InvalidInstructionException($this->instruction, 'Número negativo não permitido');
         }
 
-        $binaryNum = (string) decbin($num);
+        $binaryNum = (string) decbin($this->number);
 
         return str_pad($binaryNum, 16, '0', STR_PAD_LEFT);
     }

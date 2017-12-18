@@ -16,10 +16,21 @@ class CInstruction extends Instruction {
         $this->instruction = $instruction;
         $this->lookupTable = new LookupTable();
 
-        $this->comp = $instruction;
-//        if (strpos($instruction, '=') !== -1) {
-//
-//        }
+        $comp = $instruction;
+
+        $posEquals = strpos($comp, '=');
+        if ($posEquals !== FALSE) {
+            $this->dest = substr($comp, 0, $posEquals);
+            $comp = substr($comp, $posEquals+1);
+        }
+
+        $posSemicolon = strpos($comp, ';');
+        if ($posSemicolon !== FALSE) {
+            $this->jump = substr($comp, $posSemicolon+1);
+            $comp = substr($comp, 0, $posSemicolon);
+        }
+
+        $this->comp = $comp;
     }
 
     public function toString() {
