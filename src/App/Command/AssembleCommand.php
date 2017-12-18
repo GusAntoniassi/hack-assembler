@@ -30,8 +30,9 @@ class AssembleCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $filename = $input->getArgument('filename');
-        $text = 'Olá mundo -- ' . $filename;
 
-        $output->writeln($text);
+        $instruction = \App\Instruction\Instruction::getInstruction($filename);
+
+        $output->writeln($instruction->toString());
     }
 }
