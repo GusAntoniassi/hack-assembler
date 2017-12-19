@@ -12,7 +12,8 @@ class AssembleCommand extends Command
 {
     private $assembler;
 
-    public function __construct(Assembler $assembler) {
+    public function __construct(Assembler $assembler)
+    {
         $this->assembler = $assembler;
 
         parent::__construct();
@@ -45,14 +46,16 @@ class AssembleCommand extends Command
         $consoleStream->writeln('Assembly ended successfully');
     }
 
-    private function getFilePathDetails($path) {
+    private function getFilePathDetails($path)
+    {
         return [
-            'path' => dirname(realpath(APP_ROOT . DIRECTORY_SEPARATOR . $path)),
+            'path'     => dirname(realpath(APP_ROOT . DIRECTORY_SEPARATOR . $path)),
             'filename' => basename($path)
         ];
     }
 
-    private function getInputFileStream($basePath) {
+    private function getInputFileStream($basePath)
+    {
         $pathDetails = $this->getFilePathDetails($basePath);
         $path = $pathDetails['path'] ?? '';
         $filename = $pathDetails['filename'] ?? '';
@@ -62,7 +65,8 @@ class AssembleCommand extends Command
         return $file;
     }
 
-    private function getOutputFileStream($basePath, $outputExtension = '.hack') {
+    private function getOutputFileStream($basePath, $outputExtension = '.hack')
+    {
         $pathDetails = $this->getFilePathDetails($basePath);
         $path = $pathDetails['path'] ?? '';
         $inputFilename = $pathDetails['filename'] ?? '';

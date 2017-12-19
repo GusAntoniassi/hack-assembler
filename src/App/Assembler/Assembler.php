@@ -4,13 +4,15 @@ namespace App\Assembler;
 use App\Instruction;
 use App\Stream\IOStream;
 
-class Assembler {
+class Assembler
+{
     private $output;
 
-    public function assemble(IOStream $file) {
+    public function assemble(IOStream $file)
+    {
         $lineNumber = 0;
         $instructionFactory = new Instruction\Factory\InstructionFactory();
-        
+
         while (!$file->isEOF()) {
             $line = trim($file->readLine());
 
@@ -18,8 +20,9 @@ class Assembler {
             if ($commentStart !== FALSE) {
                 $line = trim(substr($line, 0, $commentStart));
             }
-            
-            if (empty($line)) continue;
+
+            if (empty($line))
+                continue;
 
             $lineNumber++;
 

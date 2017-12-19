@@ -1,6 +1,7 @@
 <?php
 namespace App\Instruction;
 
-interface InstructionInterface {
+interface InstructionInterface
+{
     public function getBinaryCode();
 }

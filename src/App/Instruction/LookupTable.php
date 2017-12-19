@@ -67,7 +67,8 @@ class LookupTable
         ];
     }
 
-    public function lookup($tableName, $inst) {
+    public function lookup($tableName, $inst)
+    {
         $lookupResult = $this->tablesLookup($tableName, $inst);
         if ($lookupResult === FALSE) {
             throw new Exception\UndefinedInstructionException($inst);
@@ -76,7 +77,8 @@ class LookupTable
         return $lookupResult;
     }
 
-    private function tablesLookup($tableName, $inst) {
+    private function tablesLookup($tableName, $inst)
+    {
         switch ($tableName) {
             case 'comp':
                 return $this->compLookup($inst);
@@ -89,7 +91,8 @@ class LookupTable
         }
     }
 
-    private function compLookup($inst) {
+    private function compLookup($inst)
+    {
         if ($inst === '') {
             throw new Exception\InvalidInstructionException($this->instruction, 'Instrução "comp" não pode ficar vazia!');
         }
@@ -105,10 +108,14 @@ class LookupTable
         }
         return $lookup;
     }
-    private function destLookup($inst) {
+
+    private function destLookup($inst)
+    {
         return $this->destTable[$inst] ?? false;
     }
-    private function jumpLookup($inst) {
+
+    private function jumpLookup($inst)
+    {
         return $this->jumpTable[$inst] ?? false;
     }
 }

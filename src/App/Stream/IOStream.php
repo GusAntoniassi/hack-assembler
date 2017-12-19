@@ -3,11 +3,13 @@ namespace App\Stream;
 
 use App\Exception;
 
-class IOStream {
+class IOStream
+{
     private $stream;
     private $path;
 
-    public function __construct($path, $mode) {
+    public function __construct($path, $mode)
+    {
         $this->path = $path;
         $this->stream = fopen($path, $mode);
         if ($this->stream === FALSE) {
@@ -17,27 +19,33 @@ class IOStream {
         return $this->stream;
     }
 
-    public function getStream() {
+    public function getStream()
+    {
         return $this->stream;
     }
 
-    public function isEOF() {
+    public function isEOF()
+    {
         return feof($this->stream);
     }
 
-    public function read() {
+    public function read()
+    {
         return fread($this->stream, filesize($this->path));
     }
 
-    public function readLine() {
+    public function readLine()
+    {
         return fgets($this->stream);
     }
 
-    public function write($string) {
+    public function write($string)
+    {
         return fwrite($this->stream, $string);
     }
 
-    public function close() {
+    public function close()
+    {
         return fclose($this->stream);
     }
 }
