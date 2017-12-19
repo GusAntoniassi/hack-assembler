@@ -3,7 +3,7 @@ namespace App\Instruction;
 
 use App\Exception;
 
-class CInstruction extends Instruction {
+class CInstruction implements InstructionInterface {
     private $instruction;
     
     private $dest = '';
@@ -33,7 +33,7 @@ class CInstruction extends Instruction {
         $this->comp = $comp;
     }
 
-    public function toString() {
+    public function __toString() {
         $inst = '111';
         $inst .= $this->lookupTable->lookup('comp', $this->comp);
         $inst .= $this->lookupTable->lookup('dest', $this->dest);

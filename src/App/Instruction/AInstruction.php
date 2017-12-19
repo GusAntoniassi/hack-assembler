@@ -1,7 +1,7 @@
 <?php
 namespace App\Instruction;
 
-class AInstruction extends Instruction {
+class AInstruction implements InstructionInterface {
     private $instruction;
     private $number;
     const MAX_NUM = 32766;
@@ -13,7 +13,7 @@ class AInstruction extends Instruction {
         $this->number = (int) $number;
     }
 
-    public function toString() {
+    public function __toString() {
         if ($this->number > self::MAX_NUM) {
             throw new Exception\InvalidInstructionException($this->instruction, 'Valor acima do permitido');
         } else if ($this->number < 0) {
