@@ -33,7 +33,7 @@ class CInstruction implements InstructionInterface {
         $this->comp = $comp;
     }
 
-    public function __toString() {
+    public function getBinaryCode() {
         $inst = '111';
         $inst .= $this->lookupTable->lookup('comp', $this->comp);
         $inst .= $this->lookupTable->lookup('dest', $this->dest);

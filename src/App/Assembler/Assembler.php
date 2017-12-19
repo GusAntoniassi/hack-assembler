@@ -2,14 +2,17 @@
 namespace App\Assembler;
 
 use App\Instruction;
+use App\Stream\IOStream;
 
 class Assembler {
-    public function assemble($file) {
+    private $output;
+
+    public function assemble(IOStream $file) {
         $lineNumber = 0;
         $instructionFactory = new Instruction\Factory\InstructionFactory();
         
-        while (!feof($file)) {
-            $line = trim(fgets($file));
+        while (!$file->isEOF()) {
+            $line = trim($file->readLine());
 
             $commentStart = strpos($line, '//');
             if ($commentStart !== FALSE) {
@@ -22,9 +25,9 @@ class Assembler {
 
             $instruction = $instructionFactory->getInstruction($line);
 
-            echo $instruction . "\n";
+            $this->output .= $instruction->getBinaryCode() . "\r\n";
         }
 
-        fclose($file);
+        return $this->output;
     }
 }

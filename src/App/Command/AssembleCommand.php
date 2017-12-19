@@ -1,8 +1,8 @@
 <?php
 namespace App\Command;
 
-use App\Exception;
 use App\Assembler\Assembler;
+use App\Stream\IOStream;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,23 +28,48 @@ class AssembleCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $consoleStream)
     {
-        $filename = $input->getArgument('filename');
+        $filenameArg = $input->getArgument('filename');
 
-        $path = realpath(APP_ROOT . DIRECTORY_SEPARATOR . $filename);
+        $inputStream = $this->getInputFileStream($filenameArg);
+        $outputStream = $this->getOutputFileStream($filenameArg);
 
-        @$file = fopen($path, 'r');
-        if ($file === FALSE) {
-            throw new Exception\FileNotFoundException($filename);
-        }
+        $assembledOutput = $this->assembler->assemble($inputStream);
 
-        $this->assembler->assemble($file);
+        $outputStream->write($assembledOutput);
 
-        die();
+        $inputStream->close();
+        $outputStream->close();
 
-        $instruction = \App\Instruction\Instruction::getInstruction($filename);
+        $consoleStream->writeln('Assembly ended successfully');
+    }
 
-        $output->writeln($instruction->toString());
+    private function getFilePathDetails($path) {
+        return [
+            'path' => dirname(realpath(APP_ROOT . DIRECTORY_SEPARATOR . $path)),
+            'filename' => basename($path)
+        ];
+    }
+
+    private function getInputFileStream($basePath) {
+        $pathDetails = $this->getFilePathDetails($basePath);
+        $path = $pathDetails['path'] ?? '';
+        $filename = $pathDetails['filename'] ?? '';
+
+        $file = new IOStream($path . DIRECTORY_SEPARATOR . $filename, 'r');
+
+        return $file;
+    }
+
+    private function getOutputFileStream($basePath, $outputExtension = '.hack') {
+        $pathDetails = $this->getFilePathDetails($basePath);
+        $path = $pathDetails['path'] ?? '';
+        $inputFilename = $pathDetails['filename'] ?? '';
+
+        $outFilename = substr($inputFilename, 0, strpos($inputFilename, '.')) . $outputExtension;
+        $outStream = new IOStream($path . DIRECTORY_SEPARATOR . $outFilename, 'w');
+
+        return $outStream;
     }
 }

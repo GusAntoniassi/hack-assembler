@@ -13,7 +13,7 @@ class AInstruction implements InstructionInterface {
         $this->number = (int) $number;
     }
 
-    public function __toString() {
+    public function getBinaryCode() {
         if ($this->number > self::MAX_NUM) {
             throw new Exception\InvalidInstructionException($this->instruction, 'Valor acima do permitido');
         } else if ($this->number < 0) {
