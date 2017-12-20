@@ -18,6 +18,14 @@ class Assembler
         $this->parseLabels();
         $this->parseToBinary();
 
+        /**
+         * TODO: Está quase tudo certo, mas algum endereço ele está gerando errado no Max.asm
+         * em vez de
+         * 0000000000001010
+         * ele gera
+         * 0000000000001011
+         * Acredito que seja algum problema com o número da linha, pois pelo que vi essa instrução seria a @OUTPUT_FIRST
+         */
 
         return $this->output;
     }
@@ -60,6 +68,8 @@ class Assembler
         $lines = explode(PHP_EOL, $this->output);
 
         $lineNumber = 0;
+        $output = '';
+        
         foreach ($lines as $line) {
             if ($line[0] === '(') {
                 // Remove the parenthesis
@@ -68,9 +78,12 @@ class Assembler
                 $nextLine = $this->findNextInstructionNumber($lineNumber, $lines);
                 $this->symbolTable->set($label, $nextLine);
             } else {
+                $output .= $line . PHP_EOL;
                 $lineNumber++;
             }
         }
+
+        $this->output = trim($output, PHP_EOL);
     }
 
     private function parseToBinary() {
@@ -94,7 +107,7 @@ class Assembler
             // Talvez eu precise usar algum esquema tipo containers pra fazer essa parte, já que o ideal seria a A-instruction
             // fazer o lookup na tabela sozinha
 
-            $instruction = $instructionFactory->getInstruction($line);
+            $instruction = $instructionFactory->getInstruction($line, $this->symbolTable);
 
             $output .= $instruction->getBinaryCode() . "\r\n";
         }

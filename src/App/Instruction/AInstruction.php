@@ -1,19 +1,30 @@
 <?php
 namespace App\Instruction;
 
+use App\Exception;
+use App\LookupTable\SymbolTable;
+
 class AInstruction implements InstructionInterface
 {
     private $instruction;
     private $number;
+    private $symbolTable;
 
     const MAX_NUM = 32766;
 
-    public function __construct($instruction)
+    public function __construct($instruction, SymbolTable $symbolTable)
     {
         $this->instruction = $instruction;
+        $this->symbolTable = $symbolTable;
 
-        $number = substr($instruction, 1);
-        $this->number = (int) $number;
+        $instructionValue = substr($instruction, 1);
+        if (is_numeric($instructionValue)) {
+            $this->number = (int) $instructionValue;
+        } else {
+            echo "Instruction: " . $instruction;
+            $this->number = (int) $symbolTable->lookupOrSet($instructionValue);
+            echo "Number: " . $this->number . PHP_EOL;
+        }
     }
 
     public function getBinaryCode()

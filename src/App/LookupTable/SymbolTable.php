@@ -36,6 +36,16 @@ class SymbolTable
         $this->symbolTable[$key] = $value;
     }
 
+    public function lookupOrSet($key) {
+        $lookup = $this->lookup($key);
+        if ($lookup === FALSE){
+            $this->set($key, $this->nextVariablePointer);
+            return $this->nextVariablePointer++;
+        }
+
+        return $lookup;
+    }
+
     /** Debug only **/
     public function getTable() {
         return $this->symbolTable;
