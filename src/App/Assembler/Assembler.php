@@ -10,11 +10,33 @@ class Assembler
 
     public function assemble(IOStream $file)
     {
+
+        $this->output = $this->loadFile($file);
+        $this->parseToBinary();
+
+        return $this->output;
+    }
+    
+    private function loadFile($fileStream) {
+        $output = '';
+        
+        while (!$fileStream->isEOF()) {
+            $line = $fileStream->readLine();
+            $output .= $line . PHP_EOL;
+        }
+
+        return $output;
+    }
+
+    private function parseToBinary() {
+        $lines = explode(PHP_EOL, $this->output);
+
+        $output = '';
         $lineNumber = 0;
         $instructionFactory = new Instruction\Factory\InstructionFactory();
-
-        while (!$file->isEOF()) {
-            $line = trim($file->readLine());
+        
+        foreach ($lines as $line) {
+            $line = trim($line);
 
             $commentStart = strpos($line, '//');
             if ($commentStart !== FALSE) {
@@ -28,9 +50,9 @@ class Assembler
 
             $instruction = $instructionFactory->getInstruction($line);
 
-            $this->output .= $instruction->getBinaryCode() . "\r\n";
+            $output .= $instruction->getBinaryCode() . "\r\n";
         }
 
-        return $this->output;
+        $this->output = $output;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace App\Instruction;
 
-use App\Exception;
+use App\LookupTable\InstructionTable;
 
 class CInstruction implements InstructionInterface
 {
@@ -14,7 +14,7 @@ class CInstruction implements InstructionInterface
     public function __construct($instruction)
     {
         $this->instruction = $instruction;
-        $this->lookupTable = new LookupTable();
+        $this->lookupTable = new InstructionTable();
 
         $comp = $instruction;
 

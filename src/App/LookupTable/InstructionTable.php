@@ -2,11 +2,11 @@
 /**
  * Referência: https://i.imgur.com/dRM4y0J.png
  */
-namespace App\Instruction;
+namespace App\LookupTable;
 
 use App\Exception;
 
-class LookupTable
+class InstructionTable
 {
     private $compTable;
     private $destTable;
