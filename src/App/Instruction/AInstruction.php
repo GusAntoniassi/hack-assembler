@@ -10,7 +10,7 @@ class AInstruction implements InstructionInterface
     private $number;
     private $symbolTable;
 
-    const MAX_NUM = 32766;
+    const MAX_NUM = 32767;
 
     public function __construct($instruction, SymbolTable $symbolTable)
     {
@@ -21,9 +21,7 @@ class AInstruction implements InstructionInterface
         if (is_numeric($instructionValue)) {
             $this->number = (int) $instructionValue;
         } else {
-            echo "Instruction: " . $instruction;
             $this->number = (int) $symbolTable->lookupOrSet($instructionValue);
-            echo "Number: " . $this->number . PHP_EOL;
         }
     }
 
