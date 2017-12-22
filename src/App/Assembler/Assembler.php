@@ -1,4 +1,8 @@
 <?php
+/**
+ * Carro-chefe do programa, carrega as linhas de um IOStream na memória, inicializa
+ * as labels na LookupTable e converte as instruções em binário
+ */
 namespace App\Assembler;
 
 use App\Instruction;
@@ -7,9 +11,20 @@ use App\Stream\IOStream;
 
 class Assembler
 {
+    /**
+     * @var string
+     */
     private $output;
+    /**
+     * @var SymbolTable
+     */
     private $symbolTable;
 
+    /**
+     * Faz todas as operações no arquivo e retorna sua representação em binário
+     * @param IOStream $file
+     * @return type
+     */
     public function assemble(IOStream $file)
     {
         $this->symbolTable = new SymbolTable();
@@ -18,18 +33,16 @@ class Assembler
         $this->parseLabels();
         $this->parseToBinary();
 
-        /**
-         * TODO: Está quase tudo certo, mas algum endereço ele está gerando errado no Max.asm
-         * em vez de
-         * 0000000000001010
-         * ele gera
-         * 0000000000001011
-         * Acredito que seja algum problema com o número da linha, pois pelo que vi essa instrução seria a @OUTPUT_FIRST
-         */
-
         return $this->output;
     }
-    
+
+    /**
+     * Lê um arquivo e retorna-o ignorando linhas em branco e com todos os comentários
+     * removidos
+     *
+     * @param type $fileStream
+     * @return type
+     */
     private function loadFile($fileStream) {
         $output = '';
         
@@ -51,7 +64,11 @@ class Assembler
         
         return $output;
     }
-    
+
+    /**
+     * Preenche a LookupTable com as posições de suas respectivas linhas iniciais
+     * para serem utilizadas depois em instruções JUMP
+     */
     private function parseLabels() {
         $lines = explode(PHP_EOL, $this->output);
 
@@ -60,9 +77,8 @@ class Assembler
         
         foreach ($lines as $line) {
             if ($line[0] === '(') {
-                // Remove the parenthesis
+                // Remover os parênteses
                 $label = substr($line, 1, -1);
-                // Find the next instruction that is not a label
                 $nextLine = $lineNumber;
                 $this->symbolTable->set($label, $nextLine);
             } else {
@@ -74,6 +90,9 @@ class Assembler
         $this->output = trim($output, PHP_EOL);
     }
 
+    /**
+     * Converte todas as instruções do arquivo em binário
+     */
     private function parseToBinary() {
         $lines = explode(PHP_EOL, $this->output);
 
@@ -90,10 +109,6 @@ class Assembler
 
             if (empty($line))
                 continue;
-
-            // TODO: Verificar se a instrução é uma variável (@FOO), verificar se já está na tabela e se não estiver inserir
-            // Talvez eu precise usar algum esquema tipo containers pra fazer essa parte, já que o ideal seria a A-instruction
-            // fazer o lookup na tabela sozinha
 
             $instruction = $instructionFactory->getInstruction($line, $this->symbolTable);
 

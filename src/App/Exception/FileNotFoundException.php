@@ -1,4 +1,7 @@
 <?php
+/**
+ * Exceção lançada quando um arquivo não é encontrado
+ */
 namespace App\Exception;
 
 class FileNotFoundException extends \Exception

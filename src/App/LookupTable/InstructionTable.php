@@ -1,6 +1,9 @@
 <?php
 /**
- * Referência: https://i.imgur.com/dRM4y0J.png
+ * Modela uma tabela de instruções pré-definida na especificação da Hack Language
+ *
+ * A tabela consiste de valores para os comp bits, dest bits e jump bits.
+ * Referência para a tabela: https://i.imgur.com/dRM4y0J.png
  */
 namespace App\LookupTable;
 
@@ -8,8 +11,19 @@ use App\Exception;
 
 class InstructionTable
 {
+    /**
+     * @var array
+     */
     private $compTable;
+
+    /**
+     * @var array
+     */
     private $destTable;
+
+    /**
+     * @var array
+     */
     private $jumpTable;
 
     public function __construct()
@@ -67,6 +81,14 @@ class InstructionTable
         ];
     }
 
+    /**
+     * Procura por uma instrução na tabela e retorna sua representação em binário
+     *
+     * @param string $tableName
+     * @param string $inst
+     * @return string
+     * @throws Exception\UndefinedInstructionException Caso a instrução não seja encontrada em sua respectiva tabela
+     */
     public function lookup($tableName, $inst)
     {
         $lookupResult = $this->tablesLookup($tableName, $inst);
@@ -77,6 +99,16 @@ class InstructionTable
         return $lookupResult;
     }
 
+    /**
+     * Método interno, retorna o valor do lookup em determinada tabela
+     *
+     * Foi necessário separar cada lookup pois a tabela do comp exige um
+     * processamento adicional.
+     *
+     * @param string $tableName
+     * @param string $inst
+     * @return string|boolean Retorna FALSE se a instrução não for encontrada na tabela
+     */
     private function tablesLookup($tableName, $inst)
     {
         switch ($tableName) {
@@ -91,6 +123,20 @@ class InstructionTable
         }
     }
 
+    /**
+     * Procura pela instrução na tabela comp
+     *
+     * As instruções comp não podem estar vazias, portanto uma exceção é lançada
+     * caso isso ocorra. O primeiro bit da instrução indicará ao processador qual
+     * registrador de memória será utilizado para a instrução. Quando o primeiro
+     * bit for 0, ele utilizará o A-Register, e quando for 1 ele utilizará o
+     * M-Register. Para converter a instrução para binário basta verificar se a
+     * instrução possui o caractere 'M'.
+     *
+     * @param string $inst
+     * @return string|boolean Retorna FALSE se a instrução não for encontrada na tabela
+     * @throws Exception\InvalidInstructionException
+     */
     private function compLookup($inst)
     {
         if ($inst === '') {
@@ -109,11 +155,23 @@ class InstructionTable
         return $lookup;
     }
 
+    /**
+     * Procura pela instrução na tabela dest
+     *
+     * @param string $inst
+     * @return string|boolean Retorna FALSE se a instrução não for encontrada na tabela
+     */
     private function destLookup($inst)
     {
         return $this->destTable[$inst] ?? false;
     }
 
+    /**
+     * Procura pela instrução na tabela jump
+     *
+     * @param string $inst
+     * @return string|boolean Retorna FALSE se a instrução não for encontrada na tabela
+     */
     private function jumpLookup($inst)
     {
         return $this->jumpTable[$inst] ?? false;

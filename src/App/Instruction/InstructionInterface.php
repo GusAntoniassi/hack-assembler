@@ -1,7 +1,16 @@
 <?php
+/**
+ * Interface para as instruções da Hack Assembly Language
+ */
 namespace App\Instruction;
 
 interface InstructionInterface
 {
-    public function getBinaryCode();
+
+    /**
+     * Retorna a representação binária (hack) para a instrução atual
+     *
+     * @return string
+     */
+    public function getBinaryCode(): string;
 }

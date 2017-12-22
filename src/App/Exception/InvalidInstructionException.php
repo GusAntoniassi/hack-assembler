@@ -1,4 +1,7 @@
 <?php
+/**
+ * Exceção lançada quando uma instrução possui sintaxe inválida
+ */
 namespace App\Exception;
 
 class InvalidInstructionException extends \Exception

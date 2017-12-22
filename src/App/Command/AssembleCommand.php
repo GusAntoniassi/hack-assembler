@@ -1,4 +1,14 @@
 <?php
+/**
+ * Comando que inicia o processo de assembly
+ *
+ * Utiliza a classe IOStream para abrir os arquivos de entrada e saída, que já
+ * irá tratar as exceções possíveis ao mexer com os arquivos. Passa o arquivo
+ * de entrada para o Assembler, e escreve seu retorno (o arquivo traduzido para
+ * binário) no arquivo de saída.
+ *
+ * @example assemble {filename}
+ */
 namespace App\Command;
 
 use App\Assembler\Assembler;
@@ -12,6 +22,9 @@ class AssembleCommand extends Command
 {
     private $assembler;
 
+    /**
+     * @param Assembler $assembler
+     */
     public function __construct(Assembler $assembler)
     {
         $this->assembler = $assembler;
@@ -29,6 +42,12 @@ class AssembleCommand extends Command
         );
     }
 
+    /**
+     * Faz assembly do comando recebido como argumento no $input
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $consoleStream
+     */
     protected function execute(InputInterface $input, OutputInterface $consoleStream)
     {
         $filenameArg = $input->getArgument('filename');
@@ -46,6 +65,12 @@ class AssembleCommand extends Command
         $consoleStream->writeln('Assembly ended successfully');
     }
 
+    /**
+     * Retorna a pasta pai e o filename de uma string de caminho
+     *
+     * @param type $path
+     * @return type
+     */
     private function getFilePathDetails($path)
     {
         return [
@@ -54,6 +79,12 @@ class AssembleCommand extends Command
         ];
     }
 
+    /**
+     * Retorna o IOStream para um caminho passado em $basePath
+     *
+     * @param type $basePath Caminho do arquivo de entrada
+     * @return IOStream
+     */
     private function getInputFileStream($basePath)
     {
         $pathDetails = $this->getFilePathDetails($basePath);
@@ -65,6 +96,15 @@ class AssembleCommand extends Command
         return $file;
     }
 
+    /**
+     * Cria um novo IOStream com base em um caminho do arquivo de entrada, com
+     * o mesmo diretório e nome de arquivo, porém com a extensão do arquivo
+     * alterada para $outputExtension
+     *
+     * @param type $basePath Caminho do arquivo de entrada
+     * @param type $outputExtension (optional) Extensão de saída do arquivo. Padrão: .hack
+     * @return IOStream
+     */
     private function getOutputFileStream($basePath, $outputExtension = '.hack')
     {
         $pathDetails = $this->getFilePathDetails($basePath);

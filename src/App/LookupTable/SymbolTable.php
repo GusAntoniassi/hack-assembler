@@ -1,9 +1,23 @@
 <?php
+/**
+ * Modela uma tabela de símbolos
+ * 
+ * Utilizada para armazenar e buscar os números de linhas representado pelas
+ * labels, as posições de memória das variáveis, tanto as definidas pelo usuário
+ * quanto as definidas por padrão na especificação da Hack Language.
+ */
 namespace App\LookupTable;
 
 class SymbolTable
 {
+    /**
+     * @var array
+     */
     private $symbolTable = [];
+
+    /**
+     * @var integer
+     */
     private $nextVariablePointer;
 
     public function __construct()
@@ -25,29 +39,43 @@ class SymbolTable
     }
 
     /**
+     * Busca por uma chave na tabela
+     *
      * @param string $key
-     * @return mixed Returns the value from the table, or false if not found
+     * @return string|boolean Retorna FALSE se não encontrar
      */
-    public function lookup($key) {
+    public function lookup($key)
+    {
         return $this->symbolTable[$key] ?? false;
     }
 
-    public function set($key, $value) {
+    /**
+     * Define uma chave na tabela
+     *
+     * @param string $key
+     * @param mixed $value
+     */
+    public function set($key, $value)
+    {
         $this->symbolTable[$key] = $value;
     }
 
-    public function lookupOrSet($key) {
+    /**
+     * Verifica se uma variável já está definida na tabela, e se ainda não estiver
+     * define-a na próxima posição disponível. Retorna o valor da tabela em todas
+     * as ocasiões
+     *
+     * @param string $key
+     * @return integer
+     */
+    public function lookupOrSet($key)
+    {
         $lookup = $this->lookup($key);
-        if ($lookup === FALSE){
+        if ($lookup === FALSE) {
             $this->set($key, $this->nextVariablePointer);
             return $this->nextVariablePointer++;
         }
 
         return $lookup;
-    }
-
-    /** Debug only **/
-    public function getTable() {
-        return $this->symbolTable;
     }
 }

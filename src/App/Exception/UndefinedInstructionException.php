@@ -1,4 +1,7 @@
 <?php
+/**
+ * Exception lançada quando uma instrução não é encontrada nas lookup tables
+ */
 namespace App\Exception;
 
 class UndefinedInstructionException extends \Exception

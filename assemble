@@ -1,5 +1,8 @@
 #!/usr/bin/env php
 <?php
+/**
+ * Arquivo principal, inicializa as dependências e roda o AssembleCommand.
+ */
 require_once __DIR__ . "/vendor/autoload.php";
 
 define('APP_ROOT', __DIR__);
