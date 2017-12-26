@@ -80,7 +80,7 @@ class CInstruction implements InstructionInterface
      *
      * @return string
      */
-    public function getBinaryCode()
+    public function getBinaryCode() : string
     {
         $inst = '111';
         $inst .= $this->lookupTable->lookup('comp', $this->comp);

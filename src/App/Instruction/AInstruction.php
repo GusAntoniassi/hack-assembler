@@ -71,7 +71,7 @@ class AInstruction implements InstructionInterface
      * @return string
      * @throws Exception\InvalidInstructionException
      */
-    public function getBinaryCode()
+    public function getBinaryCode() : string
     {
         if ($this->number > self::MAX_NUM) {
             throw new Exception\InvalidInstructionException($this->instruction, 'Valor acima do permitido');
