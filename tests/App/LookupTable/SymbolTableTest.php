@@ -1,24 +1,60 @@
 <?php
-
-namespace App\Test;
+namespace App\Test\LookupTable;
 
 use App\LookupTable\SymbolTable;
 use PHPUnit\Framework\TestCase;
 
-class SymbolTableTest extends TestCase {
+class SymbolTableTest extends TestCase
+{
+    private $symbolTable;
+
+    protected function setUp()
+    {
+        $this->symbolTable = new SymbolTable();
+    }
 
     /**
      * @dataProvider providerSymbolTableDefaultValues
      */
-    public function testSymbolTableIsInitializedWithDefaultValues($key, $expectedValue) {
-        $symbolTable = new SymbolTable();
-        
-        $result = $symbolTable->lookup($key);
-        
+    public function testSymbolTableIsInitializedWithDefaultValues($key, $expectedValue)
+    {
+        $result = $this->symbolTable->lookup($key);
+
         $this->assertEquals($expectedValue, $result);
     }
 
-    public function providerSymbolTableDefaultValues() {
+    public function testSetKeyFirstAndThenLookup()
+    {
+        $expected = 255;
+
+        $this->symbolTable->set('foo', $expected);
+
+        $result = $this->symbolTable->lookup('foo');
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testLookupOrSetWithNewVariable()
+    {
+        // Primeira variável será definida na posição 16
+        $expected = 16;
+
+        $result = $this->symbolTable->lookupOrSet('foo');
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testLookupOrSetWithExistingVariable()
+    {
+        $expected = $this->symbolTable->lookupOrSet('foo');
+
+        $result = $this->symbolTable->lookupOrSet('foo');
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function providerSymbolTableDefaultValues()
+    {
         return [
             ['R0', '0'],
             ['R1', '1'],

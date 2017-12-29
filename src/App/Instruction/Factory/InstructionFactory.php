@@ -28,6 +28,10 @@ class InstructionFactory
      */
     public function getInstruction($instruction, SymbolTable $symbolTable): Instruction\InstructionInterface
     {
+        if (empty($instruction)) {
+            throw new \App\Exception\EmptyInstructionException();
+        }
+
         if ($instruction[0] === '@') {
             return new Instruction\AInstruction($instruction, $symbolTable);
         } else {

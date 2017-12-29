@@ -55,6 +55,10 @@ class AInstruction implements InstructionInterface
         if (is_numeric($instructionValue)) {
             $this->number = (int) $instructionValue;
         } else {
+            if (empty($instructionValue)) {
+                throw new Exception\EmptyInstructionException();
+            }
+
             $this->number = (int) $symbolTable->lookupOrSet($instructionValue);
         }
     }

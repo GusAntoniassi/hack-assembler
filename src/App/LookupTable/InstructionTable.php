@@ -140,7 +140,7 @@ class InstructionTable
     private function compLookup($inst)
     {
         if ($inst === '') {
-            throw new Exception\InvalidInstructionException($this->instruction, 'Instrução "comp" não pode ficar vazia!');
+            throw new Exception\EmptyInstructionException();
         }
 
         $lookup = $this->compTable[$inst] ?? false;
