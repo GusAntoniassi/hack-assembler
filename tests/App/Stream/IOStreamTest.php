@@ -21,8 +21,7 @@ class IOStreamTest extends TestCase
 
     public function testConstructThrowsFileNotFoundExceptionOnInvalidFile()
     {
-        vfsStream::newFile($this->testFileName, 0000)
-            ->at($this->root);
+        $this->createInvalidTestFile();
 
         $this->expectException(FileNotFoundException::class);
 
@@ -31,8 +30,7 @@ class IOStreamTest extends TestCase
 
     public function testGetStreamReturnsResource()
     {
-        vfsStream::newFile($this->testFileName, 0700)
-            ->at($this->root);
+        $this->createTestFile();
 
         $expected = 'stream';
 
@@ -45,11 +43,7 @@ class IOStreamTest extends TestCase
 
     public function testIsEOFReturnsFalseOnNotEndOfFile()
     {
-        $fileContents = 'test' . PHP_EOL . 'file' . PHP_EOL . 'contents';
-
-        vfsStream::newFile($this->testFileName, 0700)
-            ->withContent($fileContents)
-            ->at($this->root);
+        $this->createTestFile();
 
         $stream = new IOStream($this->filePath, 'r');
 
@@ -60,11 +54,7 @@ class IOStreamTest extends TestCase
 
     public function testIsEOFReturnsTrueOnEndOfFile()
     {
-        $fileContents = 'test' . PHP_EOL . 'file' . PHP_EOL . 'contents';
-
-        vfsStream::newFile($this->testFileName, 0700)
-            ->withContent($fileContents)
-            ->at($this->root);
+        $this->createTestFile();
 
         $stream = new IOStream($this->filePath, 'r');
 
@@ -78,11 +68,7 @@ class IOStreamTest extends TestCase
 
     public function testReadReadsEntireFile()
     {
-        $fileContents = 'test' . PHP_EOL . 'file' . PHP_EOL . 'contents';
-
-        vfsStream::newFile($this->testFileName, 0700)
-            ->withContent($fileContents)
-            ->at($this->root);
+        $fileContents = $this->createTestFile();
 
         $expected = $fileContents;
 
@@ -95,30 +81,55 @@ class IOStreamTest extends TestCase
 
     public function testReadReadsLineFromFile()
     {
-        $fileContentsArray = [
-            'test',
-            'file',
-            'contents'
-        ];
+        $fileContents = $this->createTestFile();
 
-        $fileContents = implode(PHP_EOL, $fileContentsArray);
-
-        vfsStream::newFile($this->testFileName, 0700)
-            ->withContent($fileContents)
-            ->at($this->root);
+        $fileContentsArray = explode(PHP_EOL, $fileContents);
 
         $stream = new IOStream($this->filePath, 'r');
 
         $i = 0;
         while (!$stream->isEOF()) {
             $expected = $fileContentsArray[$i];
-            $result = $stream->readLine();
+            $result = str_replace(PHP_EOL, '', $stream->readLine());
 
             $this->assertEquals($expected, $result);
 
             $i++;
         }
     }
-//
-//    public function testCloseClosesResource();
+
+    public function testWriteWritesToFile() {
+        $this->createTestFile();
+
+        $contentToWrite = 'test';
+
+        $stream = new IOStream($this->filePath, 'w');
+
+        $stream->write($contentToWrite);
+
+        $stream->close();
+
+        $result = file_get_contents($this->filePath);
+
+        $this->assertEquals($contentToWrite, $result);
+    }
+
+    public function testCloseClosesResource() {
+        
+    }
+
+    private function createInvalidTestFile() {
+        vfsStream::newFile($this->testFileName, 0000)
+            ->at($this->root);
+    }
+
+    private function createTestFile() {
+        $fileContents = 'test' . PHP_EOL . 'file' . PHP_EOL . 'contents';
+
+        vfsStream::newFile($this->testFileName, 0700)
+            ->withContent($fileContents)
+            ->at($this->root);
+
+        return $fileContents;
+    }
 }
