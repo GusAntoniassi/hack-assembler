@@ -115,7 +115,15 @@ class IOStreamTest extends TestCase
     }
 
     public function testCloseClosesResource() {
-        
+        $this->createTestfile();
+
+        $stream = new IOStream($this->filePath, 'r+');
+
+        $stream->write('foo');
+
+        $stream->close();
+
+        $this->assertTrue(is_writable($this->filePath));
     }
 
     private function createInvalidTestFile() {
