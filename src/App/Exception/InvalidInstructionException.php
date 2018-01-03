@@ -13,6 +13,9 @@ class InvalidInstructionException extends \Exception
         parent::__construct($message, $code, $previous);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function __toString()
     {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
