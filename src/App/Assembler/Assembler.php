@@ -23,7 +23,7 @@ class Assembler
     /**
      * Faz todas as operações no arquivo e retorna sua representação em binário
      * @param IOStream $file
-     * @return type
+     * @return string
      */
     public function assemble(IOStream $file)
     {
