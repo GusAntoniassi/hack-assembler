@@ -61,7 +61,7 @@ class Assembler
         }
 
         $output = trim($output, PHP_EOL);
-        
+
         return $output;
     }
 
@@ -70,11 +70,15 @@ class Assembler
      * para serem utilizadas depois em instruções JUMP
      */
     private function parseLabels() {
+        if (empty($this->output)) {
+            return $this->output;
+        }
+        
         $lines = explode(PHP_EOL, $this->output);
 
         $lineNumber = 0;
         $output = '';
-        
+
         foreach ($lines as $line) {
             if ($line[0] === '(') {
                 // Remover os parênteses
@@ -94,6 +98,10 @@ class Assembler
      * Converte todas as instruções do arquivo em binário
      */
     private function parseToBinary() {
+        if (empty($this->output)) {
+            return $this->output;
+        }
+
         $lines = explode(PHP_EOL, $this->output);
 
         $output = '';
@@ -101,14 +109,6 @@ class Assembler
 
         foreach ($lines as $line) {
             $line = trim($line);
-
-            $commentStart = strpos($line, '//');
-            if ($commentStart !== FALSE) {
-                $line = trim(substr($line, 0, $commentStart));
-            }
-
-            if (empty($line))
-                continue;
 
             $instruction = $instructionFactory->getInstruction($line, $this->symbolTable);
 
