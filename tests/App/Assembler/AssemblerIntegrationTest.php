@@ -17,7 +17,8 @@ class AssemblerIntegrationTest extends TestCase
      */
     private $assembler;
 
-    protected function setUp() {
+    protected function setUp()
+    {
         $this->assembler = new Assembler();
     }
 
@@ -29,13 +30,14 @@ class AssemblerIntegrationTest extends TestCase
         $expected = $compareFile->read();
 
         $asmFile = $this->getAsmProgramFile($programPath);
-        
+
         $result = $this->assembler->assemble($asmFile);
 
         $this->assertEquals($expected, $result);
     }
 
-    public function providerTestFiles() {
+    public function providerTestFiles()
+    {
         $testFilePath = __DIR__ . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
 
         $filesDir = [
@@ -58,15 +60,17 @@ class AssemblerIntegrationTest extends TestCase
         return $filesPath;
     }
 
-    private function getAsmProgramFile($programPath) : IOStream {
+    private function getAsmProgramFile($programPath): IOStream
+    {
         $file = new IOStream($programPath . '.asm', 'r');
 
         return $file;
     }
 
-    private function getHackCompareFile($programPath) : IOStream {
+    private function getHackCompareFile($programPath): IOStream
+    {
         $file = new IOStream($programPath . '.hack', 'r');
-        
+
         return $file;
     }
 }
