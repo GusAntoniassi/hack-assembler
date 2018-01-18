@@ -23,8 +23,6 @@ class AssembleCommandTest extends TestCase {
             'filename' => 'commandTest.txt'
         ]);
 
-        // TODO: Verificar problema com o vfsStream (esse teste não funciona c/ ele)
-
         $this->assertFileExists(APP_ROOT . DIRECTORY_SEPARATOR . 'commandTest.hack');
     }
 }

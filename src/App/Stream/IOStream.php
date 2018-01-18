@@ -33,8 +33,6 @@ class IOStream
         if ($this->stream === FALSE) {
             throw new Exception\FileNotFoundException($path);
         }
-
-        return $this->stream;
     }
 
     /**
