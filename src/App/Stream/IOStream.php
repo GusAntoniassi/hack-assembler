@@ -29,7 +29,7 @@ class IOStream
     public function __construct($path, $mode)
     {
         $this->path = $path;
-        $this->stream = fopen($path, $mode);
+        $this->stream = @fopen($path, $mode);
         if ($this->stream === FALSE) {
             throw new Exception\FileNotFoundException($path);
         }
