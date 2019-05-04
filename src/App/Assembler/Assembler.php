@@ -33,20 +33,6 @@ class Assembler
 
         $this->output = $this->loadFile($file);
         $this->parseLabels();
-amslkfndsakjlçzfjkpsa]lgç]
-dfxç
-[bzcf
-[bzcf
-[bkhpzdf
-[bzfdc
-[npofgzṕnç
-drhç
-edlb
-][rsbçar
-tĺn
-]rdçb
-e[rlhb
-]wsgswopk
 
         $this->parseToBinary();
 
